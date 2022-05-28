@@ -25,3 +25,42 @@ export const postImage = async(image=null) => {
     }
     return uploadResult;
 }
+
+//multi image files upload
+export const postImages = async(images=null) => {
+    let uploadResult = '';
+    let imageUrlList = [];
+    
+    // console.log('image', image);
+    // console.log('image.name', image.name);
+    if(images.length!=0){
+        for (let index = 0; index < images.length; index++) {   
+            const image = images[index];
+            const file = image.image;
+            console.log('image', image);
+            console.log('file', file);
+            console.log('file.name',file.name);
+
+            if(file.name){
+                const storageRef = ref(storage);
+                const ext = file.name.split('.').pop();
+                const hashName = Math.random().toString(36).slice(-8);
+                const fullPath = '/images/' + hashName + '.' + ext;
+                const uploadRef = ref(storageRef, fullPath);
+        
+                // 'file' comes from the Blob or File API
+                await uploadBytes(uploadRef, file).then(async function(result) {
+                    console.log(result);
+                    console.log('Uploaded a image file!');
+        
+                    await getDownloadURL(uploadRef).then(function(url){
+                        uploadResult = url;
+                        console.log(uploadResult);
+                        imageUrlList.push(uploadResult);
+                    });
+                });
+            }
+        }
+    }
+    return imageUrlList;
+}
