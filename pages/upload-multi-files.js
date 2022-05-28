@@ -4,7 +4,7 @@ import { postImages } from "./api/upload";
 
 
 export default function UploadMultiImages() {
-    // const [images, setImage] = useState([{ image:null },]);
+
     const [images, setImage] = useState([]);
     const [createObjectURL, setCreateObjectURL] = useState([]);
 

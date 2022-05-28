@@ -30,9 +30,7 @@ export const postImage = async(image=null) => {
 export const postImages = async(images=null) => {
     let uploadResult = '';
     let imageUrlList = [];
-    
-    // console.log('image', image);
-    // console.log('image.name', image.name);
+
     if(images.length!=0){
         for (let index = 0; index < images.length; index++) {   
             const image = images[index];
