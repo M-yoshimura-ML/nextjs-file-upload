@@ -87,3 +87,41 @@ export const postAudio = async(audio='') => {
     }
     return uploadAudioResult;
 }
+
+
+export const postAudios = async(audios=null) => {
+    let uploadAudioResult = '';
+    let audioUrlList = [];
+
+    if(audios.length!=0){
+        for (let index = 0; index < audios.length; index++) {
+            const audio = audios[index];
+            const file = audio.audio;
+            console.log('audio', audio);
+            console.log('file', file);
+            console.log('file.name',file.name);
+
+            if(file.name){
+                const storageRef = ref(storage);
+                const ext = file.name.split('.').pop();
+                const hashName = Math.random().toString(36).slice(-8);
+                const fullPath = '/audios/' + hashName + '.' + ext;
+                const uploadRef = ref(storageRef, fullPath);
+        
+                // 'file' comes from the Blob or File API
+                await uploadBytes(uploadRef, file).then(async function(result) {
+                    console.log(result);
+                    console.log('Uploaded a audio file!');
+        
+                    await getDownloadURL(uploadRef).then(function(url){
+                        uploadAudioResult = url;
+                        console.log(uploadAudioResult);
+                        audioUrlList.push(uploadAudioResult);
+                    });
+                });
+            }
+        }
+        return audioUrlList;
+    }
+
+}
