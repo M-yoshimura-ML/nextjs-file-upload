@@ -22,10 +22,4 @@ export const storage = getStorage(app);
 
 
 // const analytics = getAnalytics(app);
-console.log(app);
-
-// export default function iniFirebase() {
-//   const fireApp = initializeApp(firebaseConfig);
-//   const storage = getStorage(fireApp);
-//   console.log(fireApp);
-// }
+// console.log(app);

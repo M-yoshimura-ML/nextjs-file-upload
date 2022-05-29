@@ -30,9 +30,7 @@ export const postImage = async(image=null) => {
 export const postImages = async(images=null) => {
     let uploadResult = '';
     let imageUrlList = [];
-    
-    // console.log('image', image);
-    // console.log('image.name', image.name);
+
     if(images.length!=0){
         for (let index = 0; index < images.length; index++) {   
             const image = images[index];
@@ -63,4 +61,67 @@ export const postImages = async(images=null) => {
         }
     }
     return imageUrlList;
+}
+
+
+//single audio file upload
+export const postAudio = async(audio='') => {
+    let uploadAudioResult = '';
+
+    if(audio.name){
+        const storageRef = ref(storage);
+        const ext = audio.name.split('.').pop();
+        const hashName = Math.random().toString(36).slice(-8);
+        const fullPath = '/audios/' + hashName + '.' + ext;
+        const uploadRef = ref(storageRef, fullPath);
+
+        // 'file' comes from the Blob or File API
+        await uploadBytes(uploadRef, audio).then(async function(result) {
+            console.log(result);
+            console.log('Uploaded a blob or file!');
+
+            await getDownloadURL(uploadRef).then(function(url){
+                uploadAudioResult = url;
+            });
+        });
+    }
+    return uploadAudioResult;
+}
+
+
+export const postAudios = async(audios=null) => {
+    let uploadAudioResult = '';
+    let audioUrlList = [];
+
+    if(audios.length!=0){
+        for (let index = 0; index < audios.length; index++) {
+            const audio = audios[index];
+            const file = audio.audio;
+            console.log('audio', audio);
+            console.log('file', file);
+            console.log('file.name',file.name);
+
+            if(file.name){
+                const storageRef = ref(storage);
+                const ext = file.name.split('.').pop();
+                const hashName = Math.random().toString(36).slice(-8);
+                const fullPath = '/audios/' + hashName + '.' + ext;
+                const uploadRef = ref(storageRef, fullPath);
+        
+                // 'file' comes from the Blob or File API
+                await uploadBytes(uploadRef, file).then(async function(result) {
+                    console.log(result);
+                    console.log('Uploaded a audio file!');
+        
+                    await getDownloadURL(uploadRef).then(function(url){
+                        uploadAudioResult = url;
+                        console.log(uploadAudioResult);
+                        audioUrlList.push(uploadAudioResult);
+                    });
+                });
+            }
+        }
+        return audioUrlList;
+    }
+
 }
