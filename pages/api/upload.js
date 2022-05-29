@@ -62,3 +62,28 @@ export const postImages = async(images=null) => {
     }
     return imageUrlList;
 }
+
+
+//single audio file upload
+export const postAudio = async(audio='') => {
+    let uploadAudioResult = '';
+
+    if(audio.name){
+        const storageRef = ref(storage);
+        const ext = audio.name.split('.').pop();
+        const hashName = Math.random().toString(36).slice(-8);
+        const fullPath = '/audios/' + hashName + '.' + ext;
+        const uploadRef = ref(storageRef, fullPath);
+
+        // 'file' comes from the Blob or File API
+        await uploadBytes(uploadRef, audio).then(async function(result) {
+            console.log(result);
+            console.log('Uploaded a blob or file!');
+
+            await getDownloadURL(uploadRef).then(function(url){
+                uploadAudioResult = url;
+            });
+        });
+    }
+    return uploadAudioResult;
+}
